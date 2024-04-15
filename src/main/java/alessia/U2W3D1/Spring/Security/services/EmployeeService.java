@@ -3,6 +3,7 @@ package alessia.U2W3D1.Spring.Security.services;
 import alessia.U2W3D1.Spring.Security.entities.Device;
 import alessia.U2W3D1.Spring.Security.entities.Employee;
 import alessia.U2W3D1.Spring.Security.exceptions.NotFoundException;
+import alessia.U2W3D1.Spring.Security.payloads.EmployeeLogin;
 import alessia.U2W3D1.Spring.Security.payloads.PayloadEmployee;
 import alessia.U2W3D1.Spring.Security.repositories.DeviceDAO;
 import alessia.U2W3D1.Spring.Security.repositories.EmployeeDAO;
@@ -34,7 +35,16 @@ public class EmployeeService {
     }
 
     public Employee saveEmployee(PayloadEmployee body){
-        Employee newEmployee = new Employee(body.username(),body.name(), body.surname(), body.eMail(), "https://ui-avatars.com/api/?name="+ body.name() + "+" + body.surname(), new ArrayList<>());
+        Employee newEmployee = new Employee(
+                body.username(),
+                body.name(),
+                body.surname(),
+                body.eMail(),
+                "https://ui-avatars.com/api/?name=" + body.name() + "+" + body.surname(),
+                new ArrayList<>(),
+                body.password()
+        );
+
         return this.employeeDAO.save(newEmployee);
     }
 
@@ -90,6 +100,10 @@ public class EmployeeService {
         String avatarUrl = (String) cloudinaryUploader.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
         found.setAvatarUrl(avatarUrl);
         return this.employeeDAO.save(found);
+        }
+
+        public Employee findByeMail(String email){
+        return employeeDAO.findByeMail(email).orElseThrow(() -> new NotFoundException("No Employee with the searched eMail " + email + " found"));
         }
     }
 

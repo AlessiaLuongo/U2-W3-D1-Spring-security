@@ -25,16 +25,26 @@ public class Employee {
     private String surname;
     private String eMail;
     private String avatarUrl;
+    private String password;
 
     @OneToMany
     private List<Device> devicesList = new ArrayList<>();
 
-    public Employee(String username, String name, String surname, String eMail, String avatarUrl, List<Device> devicesList) {
+    public Employee(String username, String name, String surname, String eMail, String avatarUrl, List<Device> devicesList, String password) {
         this.username = username;
         this.name = name;
         this.surname = surname;
         this.eMail = eMail;
         this.avatarUrl = avatarUrl;
         this.devicesList = devicesList;
+        this.password = password;
+
     }
+
+    public Employee(String eMail, String password) {
+        this.password = password;
+        this.eMail = getEMail();
+    }
+
+
 }

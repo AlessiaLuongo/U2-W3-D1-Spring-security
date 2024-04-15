@@ -20,5 +20,11 @@ public record PayloadEmployee(
 
         @NotEmpty(message = "Don't forget to add your email")
         @Email(message = "The given email is not valid")
-        String eMail) {
+        String eMail,
+        @NotEmpty(message = "Don't forget to add a password")
+        @Size(min = 3, max = 30, message = "The password must be between 3 and 30 characters")
+        String password
+        ) {
+
+
 }
