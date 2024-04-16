@@ -4,11 +4,17 @@ import com.cloudinary.Cloudinary;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
+@EnableWebSecurity
+@EnableMethodSecurity
 public class EmployeeConfig {
     @Bean
     public Cloudinary cloudinaryUploader(@Value("${cloudinary.name}") String name,
@@ -20,4 +26,11 @@ public class EmployeeConfig {
         configuration.put("api_secret",secret);
         return new Cloudinary(configuration);
 
-}}
+}
+    @Bean
+    PasswordEncoder getBCrypt(){
+        return new BCryptPasswordEncoder(11);
+
+    }
+
+}

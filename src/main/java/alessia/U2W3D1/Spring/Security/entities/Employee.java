@@ -2,8 +2,11 @@ package alessia.U2W3D1.Spring.Security.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Getter
@@ -14,7 +17,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "employees")
-public class Employee {
+public class Employee implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,6 +29,9 @@ public class Employee {
     private String eMail;
     private String avatarUrl;
     private String password;
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
 
     @OneToMany
     private List<Device> devicesList = new ArrayList<>();
@@ -38,6 +44,7 @@ public class Employee {
         this.avatarUrl = avatarUrl;
         this.devicesList = devicesList;
         this.password = password;
+        this.role = Role.USER;
 
     }
 
@@ -47,4 +54,28 @@ public class Employee {
     }
 
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

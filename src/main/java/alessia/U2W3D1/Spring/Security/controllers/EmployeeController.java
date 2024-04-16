@@ -9,6 +9,8 @@ import alessia.U2W3D1.Spring.Security.payloads.PayloadEmployee;
 import alessia.U2W3D1.Spring.Security.services.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +27,8 @@ public class EmployeeController {
     EmployeeService employeeService;
 
     @GetMapping
+    @PreAuthorize("hasAuthority(`ADMIN`)")
+
         public List<Employee> getAllEmployees(){
         return this.employeeService.getAllEmployees();
 }
@@ -69,4 +73,22 @@ public class EmployeeController {
             throw new RuntimeException(e);
         }
     }
+
+    @GetMapping("/me")
+    public Employee getProfile(@AuthenticationPrincipal Employee currentAuthenticatedEmployee){
+
+        return currentAuthenticatedEmployee;
+    }
+
+    @PutMapping("/me")
+    public Employee updateProfile(@AuthenticationPrincipal Employee currentAuthenticatedEmployee, @RequestBody Employee updatedEmployee){
+        return this.employeeService.findEmployeeByIdAndUpdate(currentAuthenticatedEmployee.getId(), updatedEmployee);
+    }
+
+    @DeleteMapping("/me")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteProfile(@AuthenticationPrincipal Employee currentAuthenticatedEmployee){
+        this.employeeService.findEmployeeById(currentAuthenticatedEmployee.getId());
+    }
+
 }

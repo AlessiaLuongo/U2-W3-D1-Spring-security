@@ -10,6 +10,7 @@ import alessia.U2W3D1.Spring.Security.repositories.EmployeeDAO;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,6 +31,9 @@ public class EmployeeService {
     @Autowired
     private Cloudinary cloudinaryUploader;
 
+    @Autowired
+    private PasswordEncoder bcrypt;
+
     public List<Employee> getAllEmployees(){
         return this.employeeDAO.findAll();
     }
@@ -42,7 +46,7 @@ public class EmployeeService {
                 body.eMail(),
                 "https://ui-avatars.com/api/?name=" + body.name() + "+" + body.surname(),
                 new ArrayList<>(),
-                body.password()
+                bcrypt.encode(body.password())
         );
 
         return this.employeeDAO.save(newEmployee);
